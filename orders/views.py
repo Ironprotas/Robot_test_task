@@ -1,18 +1,36 @@
-from django.shortcuts import render
-from django.http import  HttpResponse
-import csv
+import openpyxl
+from django.db.models import Sum
 from robots.models import Robot
-def export_post_csv(request):
+from django.http import HttpResponse
+from datetime import datetime, timedelta
 
+def export_excel(request):
+    wb = openpyxl.Workbook()
 
+    today = datetime.now()
+    week_ago = today - timedelta(weeks=1)
 
-    response = HttpResponse(content_type="text/csv")
-    response['Content-Disposition'] = "attachment; filename=Robots.csv"
-    writer = csv.writer(response)
+    # Получите данные с группировкой по модели и версии, а также суммой количества
+    robots = Robot.objects.filter(created__gte=week_ago).values('model', 'version').annotate(
+        total=Sum('quantity')
+    )
 
-    writer.writerow(['Модель','Версия','Количество за неделю'])
-    posts = Robot.objects.all().values_list('model','version','quantity')
-    for post in posts:
-        writer.writerow(post)
+    sheet = wb.active
+    sheet.title = "Robots Data"
+
+    sheet.append(['Модель', 'Версия', 'Количество за неделю'])
+
+    for robot in robots:
+        model = robot['model']
+        version = robot['version']
+        total = robot['total']
+        sheet.append([model, version, total])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=robots.xlsx'
+
+    wb.save(response)
+
     return response
-

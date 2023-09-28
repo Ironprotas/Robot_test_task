@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import export_post_csv
+from .views import export_excel
 
 urlpatterns = [
-    path('export/', export_post_csv, name='export')
+    path('export/', export_excel, name='export')
 ]
