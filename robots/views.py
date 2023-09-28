@@ -8,13 +8,14 @@ def create_robot(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-        #    serial = data.get('serial')
+        #   serial = data.get('serial')
             model = data.get('model')
             version = data.get('version')
             created = data.get('created')
+            quantity = data.get('quantity')
 
             existing_robot= Robot.objects.filter(
-           #     serial = serial,
+           #    serial = serial,
                 model = model,
                 version = version,
                 created = created
@@ -27,7 +28,9 @@ def create_robot(request):
             #    serial=serial,
                 model=model,
                 version=version,
-                created=created
+                created=created,
+                quantity=quantity
+
             )
 
             return JsonResponse({'message': 'Robot added'}, status=201)
@@ -52,7 +55,8 @@ def get_robot(request, model):
                   #  "serial": robot.serial,
                     "model": robot.model,
                     "version": robot.version,
-                    "created": robot.created
+                    "created": robot.created,
+                    "quantity": robot.quantity
                 })
 
             return JsonResponse(data, status=200, safe=False)

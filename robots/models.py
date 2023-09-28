@@ -6,3 +6,4 @@ class Robot(models.Model):
     model = models.CharField(max_length=2, blank=False, null=False)
     version = models.CharField(max_length=2, blank=False, null=False)
     created = models.DateTimeField(blank=False, null=False)
+    quantity = models.CharField(max_length=4, blank=True, null=True)
