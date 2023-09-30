@@ -1,3 +1,34 @@
-from django.shortcuts import render
+import openpyxl
+from django.db.models import Sum
+from robots.models import Robot
+from django.http import HttpResponse
+from datetime import datetime, timedelta
 
-# Create your views here.
+def export_excel(request):
+    wb = openpyxl.Workbook()
+    today = datetime.now()
+    week_ago = today - timedelta(weeks=1)
+
+    robots = Robot.objects.filter(created__gte=week_ago).values('model', 'version').annotate(
+        total=Sum('quantity')
+    )
+
+    sheet = wb.active
+    sheet.title = "Robots Data"
+
+    sheet.append(['Модель', 'Версия', 'Количество за неделю'])
+
+    for robot in robots:
+        model = robot['model']
+        version = robot['version']
+        total = robot['total']
+        sheet.append([model, version, total])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=robots.xlsx'
+
+    wb.save(response)
+
+    return response

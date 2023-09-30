@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
+from django.core.mail import EmailMessage
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -27,7 +27,31 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# settings.py
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',  # Уровень логирования (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+            'class': 'logging.FileHandler',  # Используем FileHandler для записи в файл
+            'filename': 'myapp.log',  # Имя файла для записи логов
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'DEBUG',  # Уровень логирования для корневого логгера
+    },
+}
+
+# Настройки для отправки почты через SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Бэкенд для отправки электронной почты
+EMAIL_HOST = 'smtp.yandex.ru'  # SMTP-сервер
+EMAIL_PORT = 587  # Порт SMTP-сервера (обычно 587 для TLS или 465 для SSL)
+EMAIL_USE_TLS = True  # Использовать TLS для защищенного соединения
+EMAIL_HOST_USER = '****'  # Ваша почта
+EMAIL_HOST_PASSWORD = '****'  # Пароль от вашей почты
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +61,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_apscheduler',
+    'apscheduler',
     'customers',
     'orders',
     'robots',
@@ -116,8 +142,13 @@ USE_L10N = True
 
 USE_TZ = True
 
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_TIMEZONE = "UTC"
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
