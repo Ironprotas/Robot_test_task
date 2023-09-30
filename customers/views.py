@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Robot, RobotAvailability, Customer
@@ -30,3 +31,8 @@ def check_robot_availability(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+=======
+from django.shortcuts import render
+
+# Create your views here.
+>>>>>>> 366629b (First task done)

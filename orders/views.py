@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import openpyxl
 from django.db.models import Sum
 from robots.models import Robot
@@ -34,3 +35,8 @@ def export_excel(request):
     wb.save(response)
 
     return response
+=======
+from django.shortcuts import render
+
+# Create your views here.
+>>>>>>> 366629b (First task done)

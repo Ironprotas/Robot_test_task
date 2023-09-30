@@ -1,5 +1,6 @@
 from django.db import models
 <<<<<<< HEAD
+<<<<<<< HEAD
 from robots.models import  Robot
 =======
 from django.core import mail
@@ -37,3 +38,9 @@ class RobotAvailability(models.Model):
             recipient_list = [self.customer.email]
             mail.send_mail(subject, plain_message, from_email, recipient_list)
 >>>>>>> Task3
+=======
+
+
+class Customer(models.Model):
+    email = models.CharField(max_length=255,blank=False, null=False)
+>>>>>>> 366629b (First task done)
